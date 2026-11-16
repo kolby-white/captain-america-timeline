@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Captain America on Screen</title>
+  <meta name="description" content="An interactive TimelineJS timeline of Captain America in the Marvel Cinematic Universe, in release order and story order.">
+  <link rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+  <style>
+    :root { --navy: #0b1f3a; --red: #b3001b; --paper: #f4f1ea; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--paper); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { display: flex; flex-direction: column; }
+    header { background: var(--navy); color: #fff; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; justify-content: space-between; }
+    header h1 { margin: 0; font-size: 1.15rem; letter-spacing: .02em; }
+    header h1 span { color: #ffd6db; font-weight: 400; }
+    .toggle { display: inline-flex; border: 1px solid rgba(255,255,255,.4); border-radius: 999px; overflow: hidden; }
+    .toggle button { background: transparent; color: #fff; border: 0; padding: 8px 16px; font: inherit; font-size: .9rem; cursor: pointer; }
+    .toggle button[aria-pressed="true"] { background: var(--red); font-weight: 600; }
+    .toggle button:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
+    #timeline-embed { flex: 1; min-height: 520px; }
+    footer { font-size: .78rem; color: #555; padding: 8px 16px; text-align: center; }
+    footer a { color: inherit; }
+    .tl-text-content p.src a { font-size: .85em; }
+    .tl-headline-date, .tl-text-content .mode { text-transform: uppercase; letter-spacing: .06em; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Captain America on Screen <span>&middot; MCU timeline</span></h1>
+    <div class="toggle" role="group" aria-label="Timeline order">
+      <button type="button" data-view="release" aria-pressed="true">Release order</button>
+      <button type="button" data-view="chronology" aria-pressed="false">Story order</button>
+    </div>
+  </header>
+  <div id="timeline-embed"></div>
+  <footer>
+    Built with <a href="https://timeline.knightlab.com/" target="_blank" rel="noopener">TimelineJS</a>.
+    Posters &copy; Marvel Studios / Disney, shown via Wikipedia for commentary. Fan project, not affiliated with Marvel.
+  </footer>
+
+  <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+  <script>
+    var options = { timenav_position: "bottom", hash_bookmark: false, font: "default", scale_factor: 1.5 };
+    var buttons = document.querySelectorAll(".toggle button");
+    function show(view) {
+      document.getElementById("timeline-embed").innerHTML = "";
+      window.timeline = new TL.Timeline("timeline-embed", "data/" + view + ".json", options);
+      buttons.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.view === view)); });
+      try { history.replaceState(null, "", "#" + view); } catch (e) {}
+    }
+    buttons.forEach(function (b) { b.addEventListener("click", function () { show(b.dataset.view); }); });
+    show(location.hash === "#chronology" ? "chronology" : "release");
+  </script>
+</body>
+</html>
